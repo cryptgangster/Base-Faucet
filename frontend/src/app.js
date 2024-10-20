@@ -1,18 +1,42 @@
-const express = require('express');
-const app = express();
-const Web3 = require('web3');
-const web3 = new Web3('https://base-testnet-url');  // Base testnet URL
+import React, { useState } from 'react';
+import Web3 from 'web3';
 
-app.use(express.json());
+const FaucetApp = () => {
+  const [address, setAddress] = useState('');
+  const [message, setMessage] = useState('');
 
-app.post('/request-tokens', async (req, res) => {
-    const { address } = req.body;
+  const requestTokens = async () => {
+    if (!Web3.utils.isAddress(address)) {
+      setMessage("Invalid address");
+      return;
+    }
 
-    // Call contract to request tokens
-    // Rate limit logic (check timestamps, etc.)
-    // Send tokens to the address
+    try {
+      const response = await fetch('/request-tokens', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address })
+      });
+      const data = await response.text();
+      setMessage(data);
+    } catch (error) {
+      setMessage("Error: " + error.message);
+    }
+  };
 
-    res.send('Tokens sent to ' + address);
-});
+  return (
+    <div>
+      <h1>Base Testnet Faucet</h1>
+      <input 
+        type="text" 
+        value={address} 
+        onChange={(e) => setAddress(e.target.value)} 
+        placeholder="Enter your wallet address" 
+      />
+      <button onClick={requestTokens}>Request Tokens</button>
+      <p>{message}</p>
+    </div>
+  );
+};
 
-app.listen(3000, () => console.log('Faucet running on port 3000'));
+export default FaucetApp;
