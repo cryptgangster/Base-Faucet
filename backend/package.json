@@ -1,0 +1,15 @@
+{
+  "name": "base-faucet-backend",
+  "version": "1.0.0",
+  "description": "Backend for Base Faucet",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "web3": "^1.6.0"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
